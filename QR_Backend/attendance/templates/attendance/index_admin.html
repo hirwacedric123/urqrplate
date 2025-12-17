@@ -5,463 +5,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <!-- <link rel="stylesheet" href="{% static 'assets/css/index.css' %}"> -->
-    <link rel="stylesheet" href="../../../static/assets/css/index.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Admin Dashboard - QRPlate</title>
+    <link rel="stylesheet" href="{% static 'assets/css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{% static 'assets/images/logo_alu.png' %}">
 </head>
 
 <body>
-    <!--Navigation Bar-->
-    <nav>
-        <div class="navigation_container">
-            <i class="fa-solid fa-bars-staggered menu" onclick="openmenuinfo()" style="
-            padding: 15px 25px;
-            transition: all 0.1s ease-in-out;
-            border-radius: 5px;
-            display: flex;" onmouseover="
-            this.style.background='#c2ecf6'" onmouseout="
-            this.style.background='transparent'"></i>
-            <img src="{% static '/assets/images/alualu.png' %}" width="100px" height="10px" class="logo" style="position: relative; margin-bottom: 10px; margin-top: 10px;">
-            <!-- <img src="../../../static/assets/images/alualu.png" alt="Logo" class="logo"> -->
-            <a href="/logout"><button class="logout_button">LogOut</button></a>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-content">
+            <div class="nav-left">
+                <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <img src="{% static 'assets/images/alualu.png' %}" class="nav-logo" alt="ALU Logo">
+                <h1 class="nav-title">Admin Dashboard</h1>
+        </div>
+            <div class="nav-right">
+                <a href="{% url 'scan_page' %}" class="nav-btn scan-btn">
+                    <i class="fas fa-qrcode"></i>
+                    <span>Scan QR</span>
+                </a>
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-btn logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+            </button>
+                </form>
+            </div>
         </div>
     </nav>
-    <section class="super-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <!-- <div class="sidebar-header">
-            <div class="logo-container">
-                <img src="{% static 'assets/images/logo.jpg' %}" alt="Logo">
-            </div>
-            <button class="theme-toggle" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i>
-            </button>
-            </div> -->
-            <div class="links-container">
-                <ul class="nav-links">
-                    <li class="nav-item active shower1" onclick="showSection('dashboard')">
+
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <ul class="sidebar-menu">
+                    <li class="menu-item active" onclick="showSection('dashboard')">
                         <i class="fas fa-home"></i>
-                        <p class="links-info">Dashboard</p>
+                        <span>Dashboard</span>
                     </li>
-                    <li class="nav-item shower2" onclick="showSection('students')">
+                    <li class="menu-item" onclick="showSection('students')">
                         <i class="fas fa-users"></i>
-                        <p class="links-info">Students</p>
+                        <span>Students</span>
                     </li>
-
-                    <li class="nav-item shower3">
-                        <a href="{% url 'scan_page' %}" style="text-decoration: none;">
-                            <img src="{% static 'assets/images/scan.svg' %}" alt="" width="20px">
+                    <li class="menu-item">
+                        <a href="{% url 'scan_page' %}" class="menu-link">
+                            <i class="fas fa-qrcode"></i>
+                            <span>Scan QR</span>
                         </a>
-                        <p class="links-info">Scan</p>
                     </li>
-
-                    <li class="nav-item shower4" onclick="printData()">
+                    <li class="menu-item" onclick="printData()">
                         <i class="fas fa-file-export"></i>
-                        <p class="links-info">Export</p>
+                        <span>Export</span>
                     </li>
-                    <li class="nav-item  settings shower5" onclick="showSection('settings')">
+                    <li class="menu-item" onclick="showSection('settings')">
                         <i class="fas fa-cog"></i>
-                        <p class="links-info">Settings</p>
+                        <span>Settings</span>
                     </li>
                 </ul>
             </div>
-        </div>
+        </aside>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="container">
+        <!-- Main Content Area -->
+        <main class="main-content">
                 <!-- Dashboard Section -->
-                <div id="dashboard" class="section active">
-                    <div class="summary">
-                        <div class="title-dash1">
-                            <p>
-                                ATTENDANCE SUMMARY
-                            </p>
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-line"></i>
+                        Attendance Summary
+                    </h2>
+                    <div class="date-filter">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="text" id="pickerdate-summary" placeholder="Select Date" class="date-input">
                         </div>
-                        <div class="date-picker-container">
-                            <input type="text" id="pickerdate-summary" placeholder="Select Date" class="date-picker">
                         </div>
-                        <div class="settings-grid">
-                            <div class="settings-card">
-                                <h3>TOTAL REGISTERED</h3>
-                                <p id="totalStudents">{{ total_students }}</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #0369A1, #0891B2);">
+                            <i class="fas fa-user-graduate"></i>
                             </div>
-                            <div class="settings-card">
-                                <h3>TOTAL ATTENDED</h3>
-                                <p id="totalAttended">{{ total_attended }}</p>
+                        <div class="stat-content">
+                            <h3 class="stat-label">Total Registered</h3>
+                            <p class="stat-value" id="totalStudents">{{ total_students }}</p>
                             </div>
-                            <div class="settings-card">
-                                <h3>PAID ATTENDED</h3>
-                                <p id="PaidAttended">{{ paid_attended }}</p>
                             </div>
-                            <div class="settings-card">
-                                <h3>PAID ABSENT</h3>
-                                <p id="PaidAbsent">{{ paid_absent }}</p>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fas fa-check-circle"></i>
                             </div>
-                            <div class="settings-card">
-                                <h3>UNPAID ATTENDED</h3>
-                                <p id="UnpaidAttended">{{ unpaid_attended }}</p>
+                        <div class="stat-content">
+                            <h3 class="stat-label">Total Attended</h3>
+                            <p class="stat-value" id="totalAttended">{{ total_attended }}</p>
                             </div>
                         </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #06B6D4, #0891B2);">
+                            <i class="fas fa-money-check-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-label">Paid Attended</h3>
+                            <p class="stat-value" id="PaidAttended">{{ paid_attended }}</p>
                     </div>
                 </div>
 
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-label">Paid Absent</h3>
+                            <p class="stat-value" id="PaidAbsent">{{ paid_absent }}</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-label">Unpaid Attended</h3>
+                            <p class="stat-value" id="UnpaidAttended">{{ unpaid_attended }}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
                 <!-- Students Section -->
-                <div id="students" class="section">
-                    <div class="student-section">
-                        <div class="button-container">
-                            <button class="filter-button" id="button_all" onclick="showAll()">All Students</button>
-                            <button class="filter-button" id="button_present" onclick="showPresent()">Attendance
-                                (Present)</button>
-                            <button class="filter-button" id="button_absent" onclick="showAbsent()">Attendance
-                                (Absent)</button>
-                            <button class="filter-button" id="button_paid" onclick="showPaid()">Paid Only</button>
-                            <button class="filter-button" id="button_paid_absent" onclick="showPaidAbsent()">Paid but
-                                Absent</button>
-                            <button class="filter-button" id="button_unpaid_present"
-                                onclick="showUnpaidPresent()">Unpaid but Present</button>
+            <section id="students" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-users"></i>
+                        Student Management
+                    </h2>
                         </div>
 
-                        <div class="selectors">
-                            <div class="date-picker-container">
-                                <input type="text" id="datePicker" placeholder="Select Date" class="date-picker">
+                <div class="filters-bar">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" id="button_all" onclick="showAll()">
+                            <i class="fas fa-list"></i>
+                            All Students
+                        </button>
+                        <button class="filter-btn" id="button_present" onclick="showPresent()">
+                            <i class="fas fa-check"></i>
+                            Present
+                        </button>
+                        <button class="filter-btn" id="button_absent" onclick="showAbsent()">
+                            <i class="fas fa-times"></i>
+                            Absent
+                        </button>
+                        <button class="filter-btn" id="button_paid" onclick="showPaid()">
+                            <i class="fas fa-dollar-sign"></i>
+                            Paid Only
+                        </button>
+                        <button class="filter-btn" id="button_paid_absent" onclick="showPaidAbsent()">
+                            <i class="fas fa-exclamation"></i>
+                            Paid Absent
+                        </button>
+                        <button class="filter-btn" id="button_unpaid_present" onclick="showUnpaidPresent()">
+                            <i class="fas fa-user-check"></i>
+                            Unpaid Present
+                        </button>
                             </div>
-                            <div class="search-container">
-                                <input type="text" id="search" placeholder="Search by Name or Phone Number"
+                </div>
+
+                <div class="search-bar">
+                    <div class="search-group">
+                        <div class="date-filter-group">
+                            <i class="fas fa-calendar"></i>
+                            <input type="text" id="datePicker" placeholder="Select Date" class="date-input">
+                        </div>
+                        <div class="search-group-input">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search" placeholder="Search by name or phone number..." 
                                     oninput="filterTable()">
-                                <button onclick="searchStudent()"><i class="fa-solid fa-search"></i></button>
+                        </div>
                             </div>
                             <div id="search-results"></div>
                         </div>
-                        <div class="table-container" style="margin-bottom: 30px;">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone Number</th>
-                                        <th>Scholar</th>
-                                        <th>Paid</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="attendance-table">
-                                    <!-- Rows will be dynamically added here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
 
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <colgroup>
+                            <col style="width: 60px;">
+                            <col style="width: 200px;">
+                            <col style="width: 250px;">
+                            <col style="width: 130px;">
+                            <col style="width: 100px;">
+                            <col style="width: 100px;">
+                            <col style="width: 150px;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Scholar</th>
+                                <th>Paid</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-table">
+                            <!-- Rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                        </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-cog"></i>
+                        Settings & Profile
+                    </h2>
                 </div>
 
-                <!-- Settings Section -->
-                <div id="settings" class="section">
-                    <!-- <h1>Settings</h1> -->
-                    <div class="settings-grid1">
-                        <div class="title-dash2">
-                            <p>
-                                SETTINGS & PROFILE
-                            </p>
+                <div class="settings-grid">
+                    <div class="settings-card" onclick="toggleModal('updateProfileModal')">
+                        <div class="settings-icon">
+                            <i class="fas fa-user-edit"></i>
                         </div>
-                        <div class="settings-functionalities">
-                            <div class="settings-card1" onclick="toggleModal('updateProfileModal')"
-                                data-modal="updateProfileModal">
                                 <h3>Update Profile</h3>
-                                <i class="fas fa-user-edit"></i>
+                        <p>Manage your personal information</p>
                             </div>
-                            <div class="settings-card1" onclick="toggleModal('raiseIssueModal')"
-                                data-modal="raiseIssueModal">
-                                <h3>Technical Support</h3>
+
+                    <div class="settings-card" onclick="toggleModal('raiseIssueModal')">
+                        <div class="settings-icon">
                                 <i class="fas fa-exclamation-triangle"></i>
                             </div>
+                        <h3>Technical Support</h3>
+                        <p>Report issues or get help</p>
                         </div>
-                        <!-- <div class="settings-card1">
-                            <h3>Data Management</h3>
-                            <p>Manage data retention and backup settings</p>
-                        </div> -->
                     </div>
-                    <!-- Modal for Updating Profile -->
+
+                <!-- Update Profile Modal -->
                     <div id="updateProfileModal" class="modal">
                         <div class="modal-content">
-                            <div class="setting-heading">
-                                <span class="close-btn" onclick="toggleModal('updateProfileModal')">&times;</span>
+                        <div class="modal-header">
                                 <h2>Update Your Profile</h2>
+                            <button class="modal-close" onclick="toggleModal('updateProfileModal')">
+                                <i class="fas fa-times"></i>
+                            </button>
                             </div>
-                            <div class="settings-form">
-                                <form method="POST" action="{% url 'admin_dashboard' %}">
+                        <form method="POST" action="{% url 'admin_dashboard' %}" class="modal-form">
                                     {% csrf_token %}
-
-                                    <!-- Displaying and allowing editing of all fields -->
+                            <div class="form-group">
                                     <label for="student_id">Student ID:</label>
                                     <input type="text" id="student_id" name="student_id"
                                         value="{{ form.student_id.value }}" disabled>
-                                    <br>
-
+                            </div>
+                            <div class="form-group">
                                     <label for="email">Email Address:</label>
                                     <input type="email" id="email" name="email" value="{{ form.email.value }}" required>
-                                    <br>
-
+                            </div>
+                            <div class="form-group">
                                     <label for="phone">Phone Number:</label>
                                     <input type="text" id="phone" name="phone" value="{{ form.phone.value }}" required>
-                                    <br>
-
+                            </div>
+                            <div class="form-group">
                                     <label for="first_name">First Name:</label>
                                     <input type="text" id="first_name" name="first_name"
                                         value="{{ form.first_name.value }}" required>
-                                    <br>
-
+                            </div>
+                            <div class="form-group">
                                     <label for="last_name">Last Name:</label>
                                     <input type="text" id="last_name" name="last_name"
                                         value="{{ form.last_name.value }}" required>
-                                    <br>
-
-                                    <label for="is_scholar">Scholar Status:</label>
-                                    <input type="checkbox" id="is_scholar" name="is_scholar" {% if form.is_scholar.value%}checked{% endif %}>
-                                    <br>
-
-                                    <button type="submit" class="submit-btn">Save Changes</button>
-                                </form>
                             </div>
-
+                            <div class="form-group checkbox-group">
+                                <label for="is_scholar">
+                                    <input type="checkbox" id="is_scholar" name="is_scholar" 
+                                           {% if form.is_scholar.value %}checked{% endif %}>
+                                    <span>I am a scholar student</span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                        </form>
                             {% if messages %}
-                            <div class="messages">
                                 {% for message in messages %}
-                                <div class="alert {{ message.tags }}">{{ message }}</div>
+                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                                 {% endfor %}
-                            </div>
                             {% endif %}
                         </div>
                     </div>
 
-                    <!-- Modal for Raising Issue -->
-                    <!-- Modal for Raising Issue -->
-                    <div id="raiseIssueModal" class="modal hidden">
+                <!-- Raise Issue Modal -->
+                <div id="raiseIssueModal" class="modal">
                         <div class="modal-content">
-                            <div class="setting-heading">
-                                <!-- <span class="close-btn" onclick="toggleModal('updateProfileModal')">&times;</span> -->
-                                <span class="close-btn" onclick="toggleModal('raiseIssueModal')">&times;</span>
+                        <div class="modal-header">
                                 <h2>Raise an Issue</h2>
+                            <button class="modal-close" onclick="toggleModal('raiseIssueModal')">
+                                <i class="fas fa-times"></i>
+                            </button>
                             </div>
-                            <div class="settings-form1">
-                                <form method="POST" action="{% url 'report_issue' %}" class="issue-form">
+                        <form method="POST" action="{% url 'report_issue' %}" class="modal-form">
                                     {% csrf_token %}
-                                    <div class="form-group1">
-                                        <label for="id_title"></label>
+                            <div class="form-group">
+                                <label for="id_title">Title</label>
                                         {{ issue_form.title }}
                                     </div>
-                                    <div class="form-group2">
-                                        <label for="id_description"></label>
+                            <div class="form-group">
+                                <label for="id_description">Description</label>
                                         {{ issue_form.description }}
                                     </div>
-                                    <div class="form-group3">
+                            <div class="form-group">
                                         <label for="id_priority">Priority</label>
                                         {{ issue_form.priority }}
                                     </div>
-                                    <button type="submit" class="submit-btn2">Submit Issue</button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Issue
+                            </button>
                                 </form>
-
-                            </div>
-                            <!-- Feedback Messages -->
                             {% if messages %}
-                            <div class="messages">
                                 {% for message in messages %}
-                                <div class="alert {{ message.tags }}">{{ message }}</div>
+                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                                 {% endfor %}
-                            </div>
                             {% endif %}
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-                </div>
             </div>
         </div>
     </section>
+        </main>
+    </div>
 
     {{ redirect_to_login_immediately }}
 
     <script>
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            function toggleModal(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    if (modal.classList.contains('show')) {
-                        modal.classList.remove('show');
-                        modal.style.display = 'none';
-                    } else {
-                        modal.style.display = 'flex';
-                        modal.classList.add('show');
-                    }
-                }
-            }
-
-            // Add click handler to the settings card
-            document.querySelector('.settings-card').addEventListener('click', function () {
-                toggleModal('updateProfileModal');
-            });
-
-            // Add click handler to close button (without using inline onclick)
-            document.querySelectorAll('.close-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const modalId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
-                    toggleModal(modalId);
-                });
-            });
-
-            // Setup modal triggers
-            document.querySelectorAll('[data-modal]').forEach(trigger => {
-                trigger.addEventListener('click', (e) => {
-                    const modalId = trigger.getAttribute('data-modal');
-                    toggleModal(modalId);
-                });
-            });
-
-            // Close modal when clicking outside
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        toggleModal(modal.id);
-                    }
-                });
-            });
-
-            // Auto-dismiss messages after 5 seconds
-            const messages = document.querySelectorAll('.alert');
-            messages.forEach(message => {
-                setTimeout(() => {
-                    message.style.opacity = '0';
-                    setTimeout(() => message.remove(), 300);
-                }, 8000);
-            });
-
-            // Form validation
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', function (e) {
-                    const email = document.getElementById('email').value;
-                    const phone = document.getElementById('phone').value;
-
-                    if (!isValidEmail(email)) {
-                        e.preventDefault();
-                        showError('Please enter a valid email address');
-                        return;
-                    }
-
-                    if (!isValidPhone(phone)) {
-                        e.preventDefault();
-                        showError('Please enter a valid phone number');
-                        return;
-                    }
-                });
-            }
-
-            function isValidEmail(email) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            }
-
-            function isValidPhone(phone) {
-                return /^\+?[\d\s-]{10,}$/.test(phone);
-            }
-
-            function showError(message) {
-                const messagesDiv = document.querySelector('.messages');
-                if (!messagesDiv) return;
-
-                const alert = document.createElement('div');
-                alert.className = 'alert error';
-                alert.textContent = message;
-                messagesDiv.appendChild(alert);
-
-                setTimeout(() => {
-                    alert.style.opacity = '0';
-                    setTimeout(() => alert.remove(), 300);
-                }, 5000);
-            }
-        });
-
-
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const tableContainer = document.querySelector('.table-container');
-            const tableHeader = tableContainer.querySelector('thead');
-
-            // Function to handle scroll shadows
-            function handleScrollShadows() {
-                const scrollTop = tableContainer.scrollTop;
-                const maxScroll = tableContainer.scrollHeight - tableContainer.clientHeight;
-
-                // Add/remove shadow classes based on scroll position
-                if (scrollTop > 0) {
-                    tableHeader.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-                } else {
-                    tableHeader.style.boxShadow = 'none';
-                }
-
-                // Add bottom shadow when not at bottom
-                if (scrollTop < maxScroll) {
-                    tableContainer.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1), 0 -4px 6px rgba(0, 0, 0, 0.1)';
-                } else {
-                    tableContainer.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                }
-            }
-
-            // Add scroll event listener
-            tableContainer.addEventListener('scroll', handleScrollShadows);
-
-            // Function to handle table updates
-            function updateTable(data) {
-                const tableBody = document.getElementById('attendance-table');
-                tableBody.innerHTML = '';
-
-                data.forEach(student => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                <td>${student.id}</td>
-                <td>${student.name}</td>
-                <td>${student.email}</td>
-                <td>${student.phone}</td>
-                <td>${student.scholar}</td>
-                <td><button class="toggle-btn ${student.paid === 'Yes' ? '' : 'no'}" onclick="togglePaid(${student.id})">${student.paid}</button></td>
-                <td>${student.present}</td>
-            `;
-                    tableBody.appendChild(row);
-                });
-
-                // Reset scroll position when table is updated
-                tableContainer.scrollTop = 0;
-            }
-
-            // Modify your existing renderTable function to use the new updateTable function
-            function renderTable(data) {
-                updateTable(data);
-                handleScrollShadows(); // Reset shadows
-            }
-
-            // Add smooth scrolling to search results
-            function scrollToStudent(studentId) {
-                const row = document.querySelector(`tr[data-id="${studentId}"]`);
-                if (row) {
-                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Add highlight effect
-                    row.classList.add('highlight');
-                    setTimeout(() => row.classList.remove('highlight'), 2000);
-                }
-            }
-        });
-
         // Data passed from the backend
         const students = JSON.parse('{{ students_json|safe }}');
 
@@ -470,146 +355,105 @@
 
         function renderTable(data) {
             tableBody.innerHTML = '';
-            data.forEach(student => {
+            data.forEach((student, index) => {
                 const row = document.createElement('tr');
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
                 row.innerHTML = `
-                <td>${student.id}</td>
-                <td>${student.name}</td>
-                <td>${student.email}</td>
-                <td>${student.phone}</td>
-                <td>${student.scholar}</td>
-                <td><button class="toggle-btn ${student.paid === 'Yes' ? '' : 'no'}" onclick="togglePaid(${student.id})">${student.paid}</button></td>
-                <td>${student.present}</td>
-            `;
+                    <td>${student.id}</td>
+                    <td><strong>${student.name}</strong></td>
+                    <td>${student.email}</td>
+                    <td>${student.phone}</td>
+                    <td><span class="badge ${student.scholar === 'Yes' ? 'badge-success' : 'badge-secondary'}">${student.scholar}</span></td>
+                    <td>
+                        <button class="toggle-btn ${student.paid === 'Yes' ? '' : 'no'}" onclick="togglePaid(${student.id})">
+                            ${student.paid}
+                        </button>
+                    </td>
+                    <td>
+                        <span class="status-badge ${student.present === 'Present' ? 'status-present' : 'status-absent'}">
+                            <i class="fas ${student.present === 'Present' ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                            ${student.present}
+                        </span>
+                    </td>
+                `;
                 tableBody.appendChild(row);
+                setTimeout(() => {
+                    row.style.transition = 'all 0.3s ease-out';
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, index * 20);
             });
         }
 
         // Initialize table
         renderTable(students);
-        // Print function
-        function printData() {
-            window.print();
-        }
 
-        const datePicker = flatpickr("#datePicker", {
-            defaultDate: "today",
-            dateFormat: "Y-m-d",
-            onChange: function (selectedDates, dateStr) {
-                loadAttendanceData(dateStr);
-            }
-        });
-
-        function loadAttendanceData(dateStr) {
-            fetch(`api/get-attendance-data/?date=${dateStr}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Render all students with their attendance status for the selected date
-                        renderTable(data.students);
-                    } else {
-                        alert("No attendance records found for the selected date.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching attendance data:", error);
-                    alert("An error occurred while fetching attendance data.");
-                });
-        }
-
-        function datesetter() {
-            const summarydate = flatpickr("#pickerdate-summary", {
-                defaultDate: "today",
-                dateFormat: "Y-m-d",
-                onChange: function (selectedDates, dateStr, instance) {
-                    const formattedDate = instance.formatDate(selectedDates[0], "Y-m-d");
-                    AttandanceSummary(formattedDate);
-                }
-            });
-
-            // Set today's date as the formattedDate by default on page load
-            const today = new Date();
-            const formattedDate = summarydate.formatDate(today, "Y-m-d");
-            document.querySelector("#pickerdate-summary")._flatpickr.setDate(today, true);
-
-        }
-
-        function AttandanceSummary(formattedDate) {
-            var content = formattedDate;
-            var csrftoken = getCookie('csrftoken');
-
-            console.log(`Sending date string: ${content}`); // Add this line for debugging
-
-            fetch('/admin_dashboard/api/get-attendance-summary/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
-                },
-                body: JSON.stringify({ content: content })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById('totalStudents').textContent = data.totalStudents;
-                    document.getElementById('totalAttended').textContent = data.totalAttended;
-                    document.getElementById('PaidAttended').textContent = data.PaidAttended;
-                    document.getElementById('PaidAbsent').textContent = data.PaidAbsent;
-                    document.getElementById('UnpaidAttended').textContent = data.UnpaidAttended;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    console.log('An error occurred while fetching attendance summary.');
-                });
-        }
-
-        // Call the function when the page loads
-        window.onload = datesetter;
-
-        renderTable(students);
-        updateDashboardStats();
-
-        // Other unchanged functions
+        // Section switching
         function showSection(sectionId) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
             document.getElementById(sectionId).classList.add('active');
-            if (sectionId === 'dashboard') updateDashboardStats();
+            event.currentTarget.classList.add('active');
+            
+            if (sectionId === 'dashboard') {
+                updateDashboardStats();
+            }
         }
 
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            body.setAttribute('data-theme', newTheme);
-            const themeIcon = document.querySelector('.theme-toggle i');
-            themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('theme', newTheme);
+        // Filter functions
+        function showAll() {
+            renderTable(students);
+            setActiveButton('button_all');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            const themeIcon = document.querySelector('.theme-toggle i');
-            themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        });
+        function showPresent() {
+            renderTable(students.filter(student => student.present === 'Present'));
+            setActiveButton('button_present');
+        }
 
+        function showAbsent() {
+            renderTable(students.filter(student => student.present === 'Absent'));
+            setActiveButton('button_absent');
+        }
+
+        function showPaid() {
+            renderTable(students.filter(student => student.paid === 'Yes'));
+            setActiveButton('button_paid');
+        }
+
+        function showPaidAbsent() {
+            renderTable(students.filter(student => student.paid === 'Yes' && student.present === 'Absent'));
+            setActiveButton('button_paid_absent');
+        }
+
+        function showUnpaidPresent() {
+            renderTable(students.filter(student => student.paid === 'No' && student.present === 'Present'));
+            setActiveButton('button_unpaid_present');
+        }
+
+        function setActiveButton(buttonId) {
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(buttonId).classList.add('active');
+        }
+
+        // Toggle paid status
         function togglePaid(id) {
             const student = students.find(s => s.id === id);
             if (student) {
                 const newStatus = student.paid === 'Yes' ? 'No' : 'Yes';
-
-                // Send an AJAX request to update the payment status in the backend
                 fetch('api/toggle-payment-status/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'), // Ensure CSRF token is sent
+                        'X-CSRFToken': getCookie('csrftoken'),
                     },
                     body: JSON.stringify({
                         id: student.id,
@@ -619,173 +463,199 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Update the student in the frontend if the backend update succeeds
                             student.paid = newStatus;
                             renderTable(students);
+                        showToast(`Payment status updated to ${newStatus}`, 'success');
                         } else {
-                            alert(data.message);
+                        showToast(data.message || 'Failed to update payment status', 'error');
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('An error occurred while updating the payment status.');
+                    showToast('An error occurred while updating the payment status', 'error');
                     });
             }
         }
 
-        // Helper function to get the CSRF token
-        function getCookie(name) {
-            const cookieValue = document.cookie.split('; ')
-                .find(row => row.startsWith(name + '='))
-                ?.split('=')[1];
-            return cookieValue;
-        }
-
-
-        function searchStudent() {
-            const query = document.getElementById("search").value;
-            fetch(`/admin_dashboard/search-students/?query=${query}`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data.results); // Do something with the search results
-                })
-                .catch((error) => {
-                    console.error("Error during fetch:", error);
-                });
-        }
-
-
-        function openmenuinfo() {
-            const shower1 = document.querySelector('.shower1 p');
-            const shower2 = document.querySelector('.shower2 p');
-            const shower3 = document.querySelector('.shower3 p');
-            const shower4 = document.querySelector('.shower4 p');
-
-            if (shower1.className | shower2.className | shower3.className | shower4.className === "links-info") {
-                shower1.className = "links-info1"
-                shower2.className = "links-info1"
-                shower3.className = "links-info1"
-                shower4.className = "links-info1"
-            } else {
-                shower1.className = "links-info"
-                shower2.className = "links-info"
-                shower3.className = "links-info"
-                shower4.className = "links-info"
-            }
-        }
-
-        function setActiveButton(buttonId) {
-            document.querySelectorAll('.filter-button').forEach(button => {
-                button.classList.remove('active');
-            });
-            document.getElementById(buttonId).classList.add('active');
-        }
-
-        function showAll() {
-            renderTable(students);
-            setActiveButton('button_all');
-        }
-        function showPresent() {
-            renderTable(students.filter(student => student.present === 'Present'));
-            setActiveButton('button_present');
-        }
-        function showAbsent() {
-            renderTable(students.filter(student => student.present === 'Absent'));
-            setActiveButton('button_absent');
-        }
-        function showPaid() {
-            renderTable(students.filter(student => student.paid === 'Yes'));
-            setActiveButton('button_paid');
-        }
-        function showPaidAbsent() {
-            renderTable(students.filter(student => student.paid === 'Yes' && student.present === 'Absent'));
-            setActiveButton('button_paid_absent');
-        }
-        function showUnpaidPresent() {
-            renderTable(students.filter(student => student.paid === 'No' && student.present === 'Present'));
-            setActiveButton('button_unpaid_present');
-        }
-
-        async function searchStudent() {
-            const searchInput = document.getElementById("search").value.trim();
-            const resultsContainer = document.getElementById("search-results");
-
-            // If the input is empty, clear the results and return
-            if (searchInput === "") {
-                resultsContainer.innerHTML = "";
-                return;
-            }
-
-            try {
-                const response = await fetch(`/admin_dashboard/search-students/?query=${encodeURIComponent(searchInput)}`);
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    // Populate results
-                    resultsContainer.innerHTML = data.results.length > 0
-                        ? data.results.map(student => `<p>${student.name} - ${student.phone}</p>`).join("")
-                        : "<p>No results found.</p>";
-                } else {
-                    resultsContainer.innerHTML = "<p>Error fetching search results.</p>";
-                }
-            } catch (error) {
-                console.error("Error during search:", error);
-                resultsContainer.innerHTML = "<p>Something went wrong. Please try again later.</p>";
-            }
-        }
-
-
-        // Filter function
+        // Search functionality
         function filterTable() {
             const query = document.getElementById('search').value.toLowerCase();
             const rows = document.querySelectorAll('#attendance-table tr');
-
             rows.forEach(row => {
-                const name = row.children[1].textContent.toLowerCase(); // Get name
-                const phone = row.children[3].textContent.toLowerCase(); // Get phone
-
-                // Check if query matches name or phone
+                const name = row.children[1].textContent.toLowerCase();
+                const phone = row.children[3].textContent.toLowerCase();
                 if (name.includes(query) || phone.includes(query)) {
-                    row.style.display = ''; // Show row
-                } else {
-                    row.style.display = 'none'; // Hide row
+                    row.style.display = '';
+            } else {
+                    row.style.display = 'none';
                 }
             });
         }
 
-        // Example: Render table rows (this would typically be replaced with your existing renderTable logic)
+        function searchStudent() {
+            const query = document.getElementById("search").value.trim();
+            const resultsContainer = document.getElementById("search-results");
+            if (query === "") {
+                resultsContainer.innerHTML = "";
+                return;
+            }
+            fetch(`/admin_dashboard/search-students/?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultsContainer.innerHTML = data.results.length > 0
+                        ? data.results.map(student => `<p>${student.name} - ${student.phone}</p>`).join("")
+                        : "<p>No results found.</p>";
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    resultsContainer.innerHTML = "<p>Error fetching search results.</p>";
+                });
+        }
 
+        // Date picker initialization
+        const datePicker = flatpickr("#datePicker", {
+            defaultDate: "today",
+            dateFormat: "Y-m-d",
+            onChange: function (selectedDates, dateStr) {
+                loadAttendanceData(dateStr);
+            }
+        });
 
-        function renderTable(data) {
-            const tableBody = document.getElementById('attendance-table');
-            tableBody.innerHTML = ''; // Clear existing rows
+        const summaryDatePicker = flatpickr("#pickerdate-summary", {
+            defaultDate: "today",
+            dateFormat: "Y-m-d",
+            onChange: function (selectedDates, dateStr) {
+                AttandanceSummary(dateStr);
+            }
+        });
 
-            data.forEach(student => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${student.id}</td>
-                <td>${student.name}</td>
-                <td>${student.email}</td>
-                <td>${student.phone}</td>
-                <td>${student.scholar}</td>
-                <td><button class="toggle-btn ${student.paid === 'Yes' ? '' : 'no'}" onclick="togglePaid(${student.id})">${student.paid}</button></td>
-                <td>${student.present}</td>
-            `;
-                tableBody.appendChild(row);
+        function loadAttendanceData(dateStr) {
+            fetch(`api/get-attendance-data/?date=${dateStr}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderTable(data.students);
+                } else {
+                        showToast("No attendance records found for the selected date.", 'info');
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching attendance data:", error);
+                    showToast("An error occurred while fetching attendance data.", 'error');
+                });
+        }
+
+        function AttandanceSummary(formattedDate) {
+            var content = formattedDate;
+            var csrftoken = getCookie('csrftoken');
+            fetch('/admin_dashboard/api/get-attendance-summary/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({ content: content })
+            })
+            .then(response => response.json())
+                .then(data => {
+                document.getElementById('totalStudents').textContent = data.totalStudents;
+                document.getElementById('totalAttended').textContent = data.totalAttended;
+                document.getElementById('PaidAttended').textContent = data.PaidAttended;
+                document.getElementById('PaidAbsent').textContent = data.PaidAbsent;
+                document.getElementById('UnpaidAttended').textContent = data.UnpaidAttended;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
             });
         }
 
-        // Render the table initially
-        renderTable(students);
+        // Initialize summary on load
+        window.onload = function() {
+            const today = new Date();
+            const formattedDate = summaryDatePicker.formatDate(today, "Y-m-d");
+            AttandanceSummary(formattedDate);
+        };
 
+        // Modal functions
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('show');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+
+        // Sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Print function
+        function printData() {
+            window.print();
+        }
+
+        // Helper functions
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="toast-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            document.body.appendChild(toast);
+                setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function updateDashboardStats() {
+            const today = new Date();
+            const formattedDate = summaryDatePicker.formatDate(today, "Y-m-d");
+                            AttandanceSummary(formattedDate);
+                        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('search').focus();
+            }
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.show').forEach(modal => {
+                    modal.classList.remove('show');
+                });
+            }
+        });
     </script>
-
 </body>
 
 </html>

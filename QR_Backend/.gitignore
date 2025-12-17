@@ -1,1 +1,13 @@
 myenv
+venv/
+.venv/
+*.env
+.env
+.env.local
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+db.sqlite3
+*.log

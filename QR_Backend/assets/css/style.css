@@ -1,13 +1,21 @@
-/* styles.css */
+/* styles.css - Deep Modern Ocean Blue Theme */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     max-height: 100vh;
-    background: linear-gradient(135deg, #1975f5, #63a4ff);
+    background: linear-gradient(135deg, #0369A1, #075985, #0891B2, #06B6D4);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     color: #333;
-  }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
   
   body::before{
     content: '';
@@ -22,10 +30,11 @@ body {
   }
 
 header {
-    background-color: #333;
+    background: linear-gradient(135deg, #0369A1, #075985);
     color: #fff;
     padding: 10px 0;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(3, 105, 161, 0.2);
 }
 
 nav ul {
@@ -50,9 +59,10 @@ footer {
     text-align: center;
     margin-top: 20px;
     padding: 10px;
-    background-color: #333;
+    background: linear-gradient(135deg, #0369A1, #075985);
     color: white;
     position: absolute;
     top: 0;
     bottom: 0;
+    box-shadow: 0 -2px 8px rgba(3, 105, 161, 0.2);
 }

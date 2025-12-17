@@ -11,7 +11,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1975f5, #63a4ff);
+    background: linear-gradient(135deg, #0369A1, #075985, #0891B2, #06B6D4);
     color: #333;
     padding: 20px;
   }
@@ -48,7 +48,7 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: 30px;
-    color: #2674e1;
+    color: #0369A1;
     position: relative;
   }
   
@@ -60,12 +60,12 @@
     transform: translateX(-50%);
     width: 60px;
     height: 3px;
-    background: #297aea;
+    background: #06B6D4;
     border-radius: 2px;
   }
   
   #scan-qr-btn, #stop-scanning-btn {
-    background: #256ccf;
+    background: #0369A1;
     color: #fff;
     border: none;
     padding: 10px 15px;
@@ -77,10 +77,10 @@
   }
   
   #scan-qr-btn:hover, #stop-scanning-btn:hover {
-    background: linear-gradient(135deg, #1975f5, #63a4ff);
+    background: linear-gradient(135deg, #0369A1, #0891B2);
     border-radius: 20px;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 5px 15px rgba(3, 105, 161, 0.3);
   }
   
 
@@ -105,7 +105,7 @@
   }
   #scan-qr-btn:active, #stop-scanning-btn:active {
     transform: translateY(0);
-    background: #256ccf;
+    background: #075985;
   }
 
   #stop-scanning-btn {
@@ -145,7 +145,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: #256ccf;
+    background: #06B6D4;
     animation: scan 2s linear infinite;
     z-index: 1;
   }

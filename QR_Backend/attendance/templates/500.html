@@ -1,252 +1,296 @@
-<!-- 500 Server Error -->
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error | QRPlate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{% static 'assets/images/logo_alu.png' %}">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --error-color: #ef4444;
+            --background-gradient: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+            --card-background: rgba(255, 255, 255, 0.98);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
 
-{% block content %}
-<link rel="icon" type="image/png" href="{% static 'assets/images/logo_alu.png' %}">
-<style>
-/* 500 Server Error Page Styles */
-.error-container {
-    min-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 40px;
-    background-color: white;
-    border-radius: 20px;
-    margin: 40px auto;
-    max-width: 600px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    animation: fadeIn 0.8s ease-out;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* Gradient background */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #1975f5, #63a4ff);
-    color: #333;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-}
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            background: var(--background-gradient);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('/QR_Backend/static/assets/images/background.jpg') no-repeat center center/cover;
-    z-index: -1;
-    opacity: 0.1;
-}
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-.error-code {
-    font-size: 140px;
-    font-weight: bold;
-    color: #d32f2f;
-    margin: 0;
-    line-height: 1;
-    text-shadow: 3px 3px 6px rgba(211, 47, 47, 0.2);
-    font-family: 'Arial Black', Arial, sans-serif;
-    animation: pulseError 2s infinite;
-    position: relative;
-}
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.15) 0%, transparent 50%);
+            z-index: 0;
+            animation: backgroundPulse 8s ease infinite;
+        }
 
-.error-code::after {
-    content: '500';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(211, 47, 47, 0.1);
-    z-index: -1;
-    font-size: 160px;
-    filter: blur(8px);
-}
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
 
-.error-message {
-    font-size: 32px;
-    color: #333;
-    margin: 20px 0;
-    font-weight: bold;
-    position: relative;
-    font-family: Arial, sans-serif;
-    animation: slideInUp 0.8s ease-out;
-}
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-.error-message::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background: linear-gradient(90deg, #d32f2f, #ef5350);
-    border-radius: 2px;
-    animation: expandWidth 0.8s ease-out;
-}
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: float 20s infinite ease-in-out;
+        }
 
-.error-description {
-    color: #666;
-    margin: 30px 0;
-    font-size: 18px;
-    line-height: 1.6;
-    max-width: 80%;
-    font-family: Arial, sans-serif;
-    animation: fadeIn 1s ease-out 0.3s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-}
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
 
-.refresh-btn {
-    background: linear-gradient(135deg, #1975f5, #63a4ff);
-    color: #fff;
-    padding: 14px 35px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-    border: none;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    position: relative;
-    overflow: hidden;
-    animation: slideInUp 0.8s ease-out 0.4s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-}
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 5s;
+        }
 
-.refresh-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
-    background: linear-gradient(135deg, #1975f5, #114690);
-}
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, -50px) rotate(180deg); }
+        }
 
-.refresh-btn:active {
-    transform: translateY(0);
-    background: linear-gradient(135deg, #1975f5, #134284);
-}
+        .error-container {
+            position: relative;
+            z-index: 1;
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 64px 48px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: slideUp 0.6s ease-out;
+        }
 
-.refresh-btn::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
-    transform: scale(0);
-    transition: transform 0.6s ease-out;
-}
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.refresh-btn:hover::before {
-    transform: scale(1);
-}
+        .error-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: var(--error-color);
+            animation: iconBounce 0.6s ease-out, iconShake 3s ease-in-out infinite;
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.2);
+        }
 
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+        @keyframes iconBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
 
-@keyframes slideInUp {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
+        @keyframes iconShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
 
-@keyframes expandWidth {
-    from { width: 0; }
-    to { width: 80px; }
-}
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--error-color), #f87171);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            line-height: 1;
+            animation: numberPulse 2s ease-in-out infinite;
+        }
 
-@keyframes pulseError {
-    0% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.9;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
+        @keyframes numberPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
 
-/* Container decorative elements */
-.error-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, #d32f2f, #ef5350);
-}
+        .error-message {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
 
-.error-container::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, rgba(211, 47, 47, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
-}
+        .error-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .error-container {
-        margin: 20px;
-        padding: 30px;
-        min-height: 70vh;
-    }
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-    .error-code {
-        font-size: 100px;
-    }
+        .btn {
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
 
-    .error-code::after {
-        font-size: 120px;
-    }
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
 
-    .error-message {
-        font-size: 24px;
-    }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        }
 
-    .error-description {
-        font-size: 16px;
-        max-width: 95%;
-    }
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
 
-    .refresh-btn {
-        padding: 12px 30px;
-        font-size: 16px;
-    }
-}
-</style>
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
 
-<div class="error-container">
-    <h1 class="error-code">500</h1>
-    <h2 class="error-message">Server Error</h2>
-    <p class="error-description">Something went wrong on our end. Please try again later.</p>
-    <button onclick="location.reload()" class="refresh-btn">Refresh Page</button>
-</div>
-{% endblock %}
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 48px 32px;
+            }
+
+            .error-code {
+                font-size: 80px;
+            }
+
+            .error-message {
+                font-size: 24px;
+            }
+
+            .error-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 48px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-server"></i>
+        </div>
+        <h1 class="error-code">500</h1>
+        <h2 class="error-message">Server Error</h2>
+        <p class="error-description">
+            Something went wrong on our end. Our team has been notified and is working to fix the issue. 
+            Please try again in a few moments.
+        </p>
+        <div class="action-buttons">
+            <button onclick="location.reload()" class="btn btn-primary">
+                <i class="fas fa-redo"></i>
+                <span>Refresh Page</span>
+            </button>
+            <a href="{% url 'login' %}" class="btn btn-secondary">
+                <i class="fas fa-home"></i>
+                <span>Go to Home</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -11,8 +11,16 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1975f5, #63a4ff);
+    background: linear-gradient(135deg, #0369A1, #075985, #0891B2, #06B6D4);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     color: #333;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 body::before{
@@ -70,15 +78,16 @@ body::before{
 }
 
 .verify input:focus {
-    border-color: #297aea;
-    border: 2px solid #297aea;
+    border-color: #0369A1;
+    border: 2px solid #0369A1;
     padding: 12px;
+    box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.15);
 }
 
 .verify button {
     width: 40%;
     font-size: 14px;
-    background: #1a5cb8;
+    background: #0369A1;
     color: white;
     border-radius: 10px;
     border: none;
@@ -89,11 +98,15 @@ body::before{
 }
 
 .verify button:hover {
+    background: #075985;
     border-radius: 20px;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3);
 }
 
 .verify button:active {
-    background: #297aea;
+    background: #0891B2;
+    transform: translateY(0);
 }
 
 /* Message Styling */

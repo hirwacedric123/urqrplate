@@ -24,7 +24,7 @@ This guide will help you deploy the QRPlate Django application to PythonAnywhere
 
 1. Navigate to the backend directory:
    ```bash
-   cd QRPlate/QR_Backend
+   cd urqrplate/QR_Backend
    ```
 
 2. Create a virtual environment:
@@ -72,7 +72,7 @@ import os
 import sys
 
 # Add your project directory to the Python path
-path = '/home/urqrplate/QRPlate/QR_Backend'
+path = '/home/urqrplate/urqrplate/QR_Backend'
 if path not in sys.path:
     sys.path.insert(0, path)
 
@@ -91,17 +91,17 @@ application = get_wsgi_application()
 1. In the **Web** tab, scroll down to **Static files**
 2. Add the following static file mappings:
    - **URL**: `/static/`
-   - **Directory**: `/home/urqrplate/QRPlate/QR_Backend/staticfiles/`
+   - **Directory**: `/home/urqrplate/urqrplate/QR_Backend/staticfiles/`
    
    - **URL**: `/media/`
-   - **Directory**: `/home/urqrplate/QRPlate/QR_Backend/media/`
+   - **Directory**: `/home/urqrplate/urqrplate/QR_Backend/media/`
 
 ## Step 6: Run Migrations and Collect Static Files
 
 1. Open a Bash console
 2. Navigate to your project:
    ```bash
-   cd ~/QRPlate/QR_Backend
+   cd ~/urqrplate/QR_Backend
    source venv/bin/activate
    ```
 
@@ -157,7 +157,7 @@ To update your application after making changes:
 
 1. Pull the latest changes:
    ```bash
-   cd ~/QRPlate
+   cd ~/urqrplate
    git pull origin main
    ```
 

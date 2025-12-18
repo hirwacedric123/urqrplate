@@ -8,7 +8,7 @@ import os
 import sys
 
 # Add your project directory to the Python path
-path = '/home/urqrplate/QRPlate/QR_Backend'
+path = '/home/urqrplate/urqrplate/QR_Backend'
 if path not in sys.path:
     sys.path.insert(0, path)
 

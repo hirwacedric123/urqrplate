@@ -182,6 +182,28 @@ Visit your website at: `https://urqrplate.pythonanywhere.com`
 - **Server log**: Available in the **Web** tab
 - **Console output**: Check Bash console for any errors
 
+### Debugging Mode (Enable DEBUG=True)
+
+To see detailed error messages when troubleshooting issues (like email errors):
+
+1. Edit your `.env` file:
+   ```bash
+   cd ~/urqrplate/QR_Backend
+   nano .env
+   ```
+
+2. Change `DEBUG=False` to `DEBUG=True`
+
+3. Save and exit (Ctrl+X, then Y, then Enter)
+
+4. **Reload your web app** from the Web tab
+
+5. Now you'll see full error tracebacks and detailed error messages
+
+**Important**: Remember to set `DEBUG=False` again after debugging for security!
+
+**Note**: When `DEBUG=True`, Django will serve static files automatically, so you might see them working even without the static files mapping in the Web tab.
+
 ## Updating Your Application
 
 To update your application after making changes:

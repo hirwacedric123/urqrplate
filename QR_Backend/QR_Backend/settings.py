@@ -165,6 +165,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')  # Gmail address
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Gmail App Password (not regular password)
+# Default email address for sending emails (should match EMAIL_HOST_USER)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER if EMAIL_HOST_USER else 'noreply@localhost'
+SERVER_EMAIL = EMAIL_HOST_USER if EMAIL_HOST_USER else 'noreply@localhost'
 
 
 REST_FRAMEWORK = {
@@ -188,18 +191,19 @@ SESSION_COOKIE_SECURE = not DEBUG  # Only secure in production (HTTPS)
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Security settings for production
+# Disabled for now to avoid potential issues - can be re-enabled after testing
 if not DEBUG:
     # HTTPS Security
     SECURE_SSL_REDIRECT = False  # PythonAnywhere handles SSL, so we don't redirect
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # PythonAnywhere uses proxy
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # SECURE_HSTS_SECONDS = 31536000  # Temporarily disabled
+    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # SECURE_HSTS_PRELOAD = True
     
     # Content Security
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
+    X_FRAME_OPTIONS = 'SAMEORIGIN'  # Changed from DENY to allow iframes if needed
     
     # CSRF Protection
     CSRF_COOKIE_SECURE = True

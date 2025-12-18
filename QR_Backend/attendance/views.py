@@ -373,7 +373,7 @@ def send_otp(email, otp):
     email_message = EmailMessage(
         subject,
         html_content,
-        settings.EMAIL_HOST_USER,
+        settings.DEFAULT_FROM_EMAIL,  # Use DEFAULT_FROM_EMAIL instead of EMAIL_HOST_USER
         [email]
     )
     
@@ -687,7 +687,7 @@ def send_otp_api(request):
             email_message = EmailMessage(
                 'Your OTP for Login - QR Plate',
                 html_content,
-                settings.EMAIL_HOST_USER,
+                settings.DEFAULT_FROM_EMAIL,  # Use DEFAULT_FROM_EMAIL instead of EMAIL_HOST_USER
                 [email]
             )
             

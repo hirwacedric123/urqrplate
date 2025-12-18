@@ -26,13 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sq5@yvc*#8*e_gva93=^d=#^ket&#i^#ymz)7#_orb*i0n!ork'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-sq5@yvc*#8*e_gva93=^d=#^ket&#i^#ymz)7#_orb*i0n!ork')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '9865-196-12-151-106.ngrok-free.app']
+# Get allowed hosts from environment variable or use default
+ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,urqrplate.pythonanywhere.com')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',')]
 
 
 
@@ -143,12 +144,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://9865-196-12-151-106.ngrok-free.app'  # Replace with your actual Ngrok URL
-]
-BASE_URL = "9865-196-12-151-106.ngrok-free.app"
+# CSRF Trusted Origins - get from environment or use defaults
+CSRF_TRUSTED_ORIGINS_STR = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://urqrplate.pythonanywhere.com,https://9865-196-12-151-106.ngrok-free.app')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in CSRF_TRUSTED_ORIGINS_STR.split(',')]
 
-SITE_URL ='http://localhost:8000'
+BASE_URL = os.getenv('BASE_URL', 'urqrplate.pythonanywhere.com')
+SITE_URL = os.getenv('SITE_URL', 'https://urqrplate.pythonanywhere.com')
 
 
 # settings.py
@@ -178,7 +179,7 @@ SIMPLE_JWT = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default session backend
 
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True  # if using HTTPS
+SESSION_COOKIE_SECURE = not DEBUG  # Only secure in production (HTTPS)
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 

@@ -1,6 +1,6 @@
 # QRPlate
 
-The QRPlate is a system made to enahance the ALU Dining Management process, a web and mobile-based solution designed to streamline the dining experience at the African Leadership University.
+The QRPlate is a system made to enhance the UR Dining Management process, a web and mobile-based solution designed to streamline the dining experience at the University of Rwanda.
 By leveraging QR code technology, this system automates student attendance tracking, minimizes long queues, and eliminates issues related to manual ticketing. This document serves as the foundational guide for the project throughout the course.
 
 
@@ -8,7 +8,7 @@ By leveraging QR code technology, this system automates student attendance track
 
 ### Overall Goal
 
-Develop a comprehensive web and mobile application to automate and enhance ALU's dining management.
+Develop a comprehensive web and mobile application to automate and enhance the University of Rwanda's dining management.
 
 
 ### SMART Objectives 
@@ -24,12 +24,10 @@ Relevant: Directly address operational challenges affecting students and staff.
 
 ### 4. Scope of Work
 
-| Team Member | Role | Responsibilities |
-|------------|------|-----------------|
-| Bonaparte Uteramahoro | Mobile App Development | • Design and develop mobile application using Flutter<br>• Implement responsive UI/UX design patterns<br>• Ensure cross-platform compatibility<br>• Optimize mobile app performance<br>• Implement offline functionality and local storage |
-| Anjeline Noel | System Development & Security Lead | • Design and implement database architecture<br>• Manage system security protocols<br>• Handle server deployment and hosting<br>• Implement authentication systems<br>• Ensure data integrity and protection<br>• Optimize database performance |
-| Uwambaje Eddy | Web App Frontend Lead | • Develop great web interface<br>• Implement modern frontend frameworks<br>• Create interactive UI components<br>• Ensure cross-browser compatibility<br>• Optimize web application performance<br>• Integrate frontend with backend APIs |
-| Birenzi David | System Development & Backend Lead | • Develop core backend infrastructure<br>• Implement security measures<br>• Design and maintain API endpoints<br>• Manage database architecture<br>• Handle server deployment and hosting<br>• Ensure system scalability |
+| Team Member | Contact Information | Responsibilities |
+|------------|---------------------|-----------------|
+| HIRWA CYUZUZO Cedric | Email: hirwacedr12@gmail.com | • System development and implementation<br>• Backend and frontend development<br>• Mobile application development<br>• Database design and management<br>• Security implementation<br>• Testing and deployment |
+| UWAYO Anne Marie | Phone: +250 790 300 846 | • System development and implementation<br>• Backend and frontend development<br>• Mobile application development<br>• Database design and management<br>• Security implementation<br>• Testing and deployment<br>• Documentation and user support |
 
 ### Deliverables:
 #### Web and mobile apps

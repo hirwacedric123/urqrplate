@@ -22,4 +22,18 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('attendance.urls')), 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Serve static and media files
+# Note: static() helper only works when DEBUG=True
+# In production on PythonAnywhere:
+#   - Static files: Configure in Web tab > Static files section
+#   - Media files: Can be served by Django or configured in Web tab > Static files section
+if settings.DEBUG:
+    # Development: Django serves both static and media files
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # Production: Static files served by PythonAnywhere web server
+    # Media files can be served by Django (or configure in PythonAnywhere Web tab)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -679,9 +679,6 @@ width: 100%; */
 .table-container table tbody tr:last-of-type{
     border-bottom: 2px solid #1a1a1a;
 }
-.table-container tbody tr:hover {
-    background: rgba(88, 164, 89, 0.05);
-}
 
 .table-container td {
     padding: 0.6em;

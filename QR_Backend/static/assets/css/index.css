@@ -986,24 +986,6 @@ body::before {
     background-color: rgba(3, 105, 161, 0.015);
 }
 
-.data-table tbody tr:hover {
-    background: linear-gradient(90deg, rgba(3, 105, 161, 0.1), rgba(6, 182, 212, 0.08));
-    box-shadow: 0 4px 12px rgba(3, 105, 161, 0.12);
-    position: relative;
-}
-
-.data-table tbody tr:hover::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, var(--primary), var(--accent));
-    z-index: 0;
-    pointer-events: none;
-}
-
 .data-table td {
     padding: 1.5rem 1.25rem;
     color: var(--text-primary);

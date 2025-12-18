@@ -27,9 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-sq5@yvc*#8*e_gva93=^d=#^ket&#i^#ymz)7#_orb*i0n!ork')
+if not SECRET_KEY or SECRET_KEY.startswith('django-insecure'):
+    import warnings
+    warnings.warn('SECRET_KEY is not set or using insecure default. Set SECRET_KEY in .env file for production!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 # Get allowed hosts from environment variable or use default
 ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,urqrplate.pythonanywhere.com')
@@ -182,7 +185,28 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = not DEBUG  # Only secure in production (HTTPS)
 SESSION_COOKIE_SAMESITE = 'Lax'
 
-
+# Security settings for production
+if not DEBUG:
+    # HTTPS Security
+    SECURE_SSL_REDIRECT = False  # PythonAnywhere handles SSL, so we don't redirect
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # PythonAnywhere uses proxy
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # Content Security
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # CSRF Protection
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+else:
+    # Development settings
+    SECURE_SSL_REDIRECT = False
+    SECURE_PROXY_SSL_HEADER = None
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # ERROR HANDLERS
 handler404 = 'attendance.views.handler404'

@@ -186,33 +186,28 @@ SIMPLE_JWT = {
 # SESSION_COOKIE_AGE = 600  # Session expires in 10 minutes 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default session backend
 
+# Session settings - made less restrictive for debugging
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = not DEBUG  # Only secure in production (HTTPS)
+SESSION_COOKIE_SECURE = False  # Disabled for easier debugging
 SESSION_COOKIE_SAMESITE = 'Lax'
 
-# Security settings for production
-# Disabled for now to avoid potential issues - can be re-enabled after testing
-if not DEBUG:
-    # HTTPS Security
-    SECURE_SSL_REDIRECT = False  # PythonAnywhere handles SSL, so we don't redirect
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # PythonAnywhere uses proxy
-    # SECURE_HSTS_SECONDS = 31536000  # Temporarily disabled
-    # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    # SECURE_HSTS_PRELOAD = True
-    
-    # Content Security
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'SAMEORIGIN'  # Changed from DENY to allow iframes if needed
-    
-    # CSRF Protection
-    CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = True
-else:
-    # Development settings
-    SECURE_SSL_REDIRECT = False
-    SECURE_PROXY_SSL_HEADER = None
-    X_FRAME_OPTIONS = 'SAMEORIGIN'
+# Security settings - made less restrictive for debugging
+# Most security features disabled to avoid potential issues during development/debugging
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = None  # Disabled
+# SECURE_HSTS_SECONDS = 31536000  # Disabled
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Disabled
+# SECURE_HSTS_PRELOAD = True  # Disabled
+
+# Content Security - relaxed
+SECURE_CONTENT_TYPE_NOSNIFF = False  # Disabled
+SECURE_BROWSER_XSS_FILTER = False  # Disabled
+X_FRAME_OPTIONS = 'SAMEORIGIN'  # Allow iframes
+
+# CSRF Protection - relaxed
+CSRF_COOKIE_SECURE = False  # Disabled for easier debugging
+CSRF_COOKIE_HTTPONLY = False  # Disabled for easier debugging
+CSRF_USE_SESSIONS = False  # Use cookies instead of sessions
 
 # ERROR HANDLERS
 handler404 = 'attendance.views.handler404'

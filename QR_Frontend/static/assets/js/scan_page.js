@@ -48,15 +48,41 @@ function scanQRCode() {
                 let qrCodeId = code.data;
                 console.log('QR Code detected:', qrCodeId);
 
-                if (qrCodeId.includes("/scan/")) {
-                    qrCodeId = qrCodeId.split("/scan/").pop();
+                // Extract UUID from URL or string
+                const uuidPattern = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/i;
+                
+                // Try to parse as URL first
+                try {
+                    const urlObj = new URL(qrCodeId);
+                    qrCodeId = urlObj.pathname.split('/').filter(Boolean).pop();
+                } catch (e) {
+                    // If URL parsing fails, try adding protocol
+                    try {
+                        const urlObj = new URL('https://' + qrCodeId);
+                        qrCodeId = urlObj.pathname.split('/').filter(Boolean).pop();
+                    } catch (e2) {
+                        // If still fails, try to extract UUID directly from string
+                        const uuidMatch = qrCodeId.match(uuidPattern);
+                        if (uuidMatch) {
+                            qrCodeId = uuidMatch[0];
+                        } else {
+                            // Try extracting from /scan/ pattern
+                            if (qrCodeId.includes("/scan/")) {
+                                qrCodeId = qrCodeId.split("/scan/").pop().split('/')[0];
+                            } else {
+                                // Remove leading/trailing slashes and whitespace
+                                qrCodeId = qrCodeId.replace(/^\/+|\/+$/g, '').trim();
+                            }
+                        }
+                    }
                 }
 
                 console.log('Extracted QR Code ID:', qrCodeId);
 
-                const uuidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-
-                if (!uuidPattern.test(qrCodeId)) {
+                // Validate UUID format
+                const strictUuidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+                if (!strictUuidPattern.test(qrCodeId)) {
+                    console.error('Invalid UUID format:', qrCodeId);
                     showStatusOverlay('Invalid QR Code', 'error', 'red-x-icon.png');
                     return;
                 }

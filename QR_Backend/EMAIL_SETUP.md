@@ -108,3 +108,6 @@ EMAIL_USE_TLS = True
 - The `.env` file is already in `.gitignore`
 - Keep your App Password secure and don't share it
 
+
+
+

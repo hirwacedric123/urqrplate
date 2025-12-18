@@ -86,17 +86,9 @@ application = get_wsgi_application()
 
 4. Save the file
 
-## Step 5: Configure Static Files
+## Step 5: Run Migrations and Collect Static Files
 
-1. In the **Web** tab, scroll down to **Static files**
-2. Add the following static file mappings:
-   - **URL**: `/static/`
-   - **Directory**: `/home/urqrplate/urqrplate/QR_Backend/staticfiles/`
-   
-   - **URL**: `/media/`
-   - **Directory**: `/home/urqrplate/urqrplate/QR_Backend/media/`
-
-## Step 6: Run Migrations and Collect Static Files
+**IMPORTANT**: Run `collectstatic` BEFORE configuring static files in the Web tab!
 
 1. Open a Bash console
 2. Navigate to your project:
@@ -115,10 +107,37 @@ application = get_wsgi_application()
    python manage.py createsuperuser
    ```
 
-5. Collect static files:
+5. **Collect static files** (this copies all static files to the `staticfiles/` directory):
    ```bash
    python manage.py collectstatic --noinput
    ```
+   
+   You should see output like:
+   ```
+   Copying '/home/urqrplate/urqrplate/QR_Backend/static/assets/images/alualu.png'
+   ...
+   X static files copied to '/home/urqrplate/urqrplate/QR_Backend/staticfiles'
+   ```
+
+6. Verify static files were collected:
+   ```bash
+   ls -la staticfiles/assets/images/
+   ```
+   
+   You should see files like `alualu.png`, `logo_alu.png`, etc.
+
+## Step 6: Configure Static Files in PythonAnywhere Web Tab
+
+1. In the **Web** tab, scroll down to **Static files**
+2. Add the following static file mappings (make sure the paths are correct):
+   - **URL**: `/static/`
+   - **Directory**: `/home/urqrplate/urqrplate/QR_Backend/staticfiles/`
+   
+   - **URL**: `/media/`
+   - **Directory**: `/home/urqrplate/urqrplate/QR_Backend/media/`
+
+3. **Important**: Make sure there are no trailing slashes in the paths
+4. Click **Save** after adding each mapping
 
 ## Step 7: Update Settings for Production
 
@@ -141,7 +160,19 @@ Visit your website at: `https://urqrplate.pythonanywhere.com`
 ### Common Issues:
 
 1. **500 Error**: Check the error log in the **Web** tab
-2. **Static files not loading**: Ensure `collectstatic` was run and static files mapping is correct
+2. **Static files not loading (images, CSS, logos)**:
+   - **First**: Make sure `collectstatic` was run successfully (see Step 5)
+   - **Check**: Verify files exist in `staticfiles/` directory:
+     ```bash
+     ls -la ~/urqrplate/QR_Backend/staticfiles/assets/images/
+     ```
+   - **Verify**: Static files mapping in Web tab is correct:
+     - URL: `/static/` (with trailing slash)
+     - Directory: `/home/urqrplate/urqrplate/QR_Backend/staticfiles/` (NO trailing slash)
+   - **Check**: Make sure `DEBUG=False` in your `.env` file (static files are served by web server, not Django in production)
+   - **Reload**: After fixing, reload the web app from the Web tab
+   - **Test**: Visit `https://urqrplate.pythonanywhere.com/static/assets/images/alualu.png` directly - it should show the image
+   - **Common mistake**: If you see 404, check that the directory path doesn't have a trailing slash
 3. **Database errors**: Make sure migrations were run successfully
 4. **Import errors**: Verify the virtual environment is activated and dependencies are installed
 
@@ -177,7 +208,7 @@ To update your application after making changes:
    python manage.py migrate
    ```
 
-5. Collect static files:
+5. **Collect static files** (important if you added/changed CSS, images, or JS):
    ```bash
    python manage.py collectstatic --noinput
    ```
